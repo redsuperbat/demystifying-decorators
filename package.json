@@ -1,9 +1,8 @@
 {
-  "name": "reveal.js",
+  "name": "demystifying-decorators",
   "version": "4.4.0",
   "description": "The HTML Presentation Framework",
   "homepage": "https://revealjs.com",
-  "subdomain": "revealjs",
   "main": "dist/reveal.js",
   "module": "dist/reveal.esm.js",
   "license": "MIT",
@@ -13,22 +12,15 @@
     "build": "gulp build"
   },
   "author": {
-    "name": "Hakim El Hattab",
-    "email": "hakim.elhattab@gmail.com",
-    "web": "https://hakim.se"
+    "name": "Max Netterberg",
+    "email": "max.netterberg@gmail.com"
   },
   "repository": {
-    "type": "git",
-    "url": "git://github.com/hakimel/reveal.js.git"
+    "type": "git"
   },
   "engines": {
     "node": ">=10.0.0"
   },
-  "keywords": [
-    "reveal",
-    "slides",
-    "presentation"
-  ],
   "devDependencies": {
     "@babel/core": "^7.14.3",
     "@babel/eslint-parser": "^7.14.3",
