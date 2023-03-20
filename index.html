@@ -1,50 +1,191 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Demystifying Decorators</title>
+    <link rel="icon" type="image/png" href="dist/favicon.ico" />
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/moon.css" />
 
-	<title>reveal.js</title>
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/zenburn.css" />
+  </head>
 
-	<link rel="stylesheet" href="dist/reset.css">
-	<link rel="stylesheet" href="dist/reveal.css">
-	<link rel="stylesheet" href="dist/theme/black.css">
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>Demystifying Decorators</h2>
+          <p>How do <code>@Decorators()</code> really work?</p>
+          <p>And what can they be used for? 🤷</p>
+        </section>
+        <section>
+          <h2 class="r-fit-text">⚠️ Disclaimer! ⚠️</h2>
+          <p class="r-fit-text">
+            <a
+              href="https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#decorators"
+              target="_blank"
+              >Typescript 5.0</a
+            >
+            just came out!
+          </p>
 
-	<!-- Theme used for syntax highlighted code -->
-	<link rel="stylesheet" href="plugin/highlight/monokai.css">
-</head>
+          <!-- <p>
+					Decorators existed for years within typescript but the Ecmascript decorator proposal has reached stage 3
+					(candidate). Which is a bit different from the typescript standard. This talk will be about the typescript
+					decorator standard which is still highly relevant since most frameworks will take years to adapt to the new
+					standard when it eventually reaches stage 4 (finished) 
+				</p> -->
+        </section>
+        <section>
+          <section>
+            <h2>What is a decorator?</h2>
+            <small class="fragment fade-in">
+              <ul>
+                <li>
+                  PropertyDecorator
+                  <pre>
+									<code data-line-numbers data-trim>
+										class MyClass {
+											@Input()
+											myProp: string;
+										}
+									</code>
+								</pre>
+                </li>
+                <li class="fragment fade-in">
+                  MethodDecorator
+                  <pre>
+									<code data-line-numbers data-trim>
+										class MyClass {
+											@Computed()
+											myMethod(){
+												//
+											};
+										}
+									</code>
+								</pre>
+                </li>
+                <li class="fragment fade-in">
+                  ClassDecorator
 
-<body>
-	<div class="reveal">
-		<div class="slides">
-			<section>Demystifying Decorators</section>
-			<section>
-				<section>
-					Slide 2
-				</section>
-				<section>
-					Slide 2
-				</section>
-			</section>
-		</div>
-	</div>
+                  <pre>
+									<code data-line-numbers data-trim>
+										@Component()
+										class MyComponent {}
+									</code>
+								</pre>
+                </li>
+              </ul>
+            </small>
 
-	<script src="dist/reveal.js"></script>
-	<script src="plugin/notes/notes.js"></script>
-	<script src="plugin/markdown/markdown.js"></script>
-	<script src="plugin/highlight/highlight.js"></script>
-	<script>
-		// More info about initialization & config:
-		// - https://revealjs.com/initialization/
-		// - https://revealjs.com/config/
-		Reveal.initialize({
-			hash: true,
+            <pre class="fragment fade-in">
+						<code data-trim>
+							// My first decorator 🎉
+							function log() {
+								console.log("What's up JS-Meetup? ⚡️🚀")
+							}
+						</code>
+					</pre>
+          </section>
 
-			// Learn about plugins: https://revealjs.com/plugins/
-			plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
-		});
-	</script>
-</body>
+          <section>
+            <small> company.ts </small>
+            <pre>
+						<code data-line-numbers="1-3|5-10|7-9|6|*" data-trim class="language-ts">
+							function log(target: any, propertyKey: string, descriptor: any) {
+								console.log("What's up JS-Meetup? ⚡️🚀");
+							}
+							
+							class Company {
+								@log
+								calculateSalary(salary: number) {
+									return salary * 0.2;
+								}
+							}							
+						</code>
+					</pre>
+            <pre class="fragment fade-in">
+						<code data-trim data-line-numbers class="language-plaintext" >
+							ts-node ./company.ts 
+						</code>
+						<code class="fragment fade-in language-plaintext" data-trim data-line-numbers >
+							What's up JS-Meetup? ⚡️🚀
+						</code>
+					</pre>
+          </section>
+        </section>
+        <section>
+          <small> company.ts </small>
+          <pre>
+						<code  data-trim data-line-numbers="1-5|6|8-13|16-21|23-25">
+							function log(
+								target: Object,
+								propertyKey: string,
+								descriptor: PropertyDescriptor
+							) {
+								const originalMethod = descriptor.value;
+							
+								descriptor.value = function (this: any, ...args: any[]) {
+									console.log(`INFO: Running function ${propertyKey} with input ${args}`);
+									const res = originalMethod.call(this, ...args);
+									console.log(`INFO: function ${propertyKey} ran with result ${res}`);
+									return res;
+								};
+							}
+							
+							class Company {
+								@log
+								calculateSalary(salary: number) {
+									return salary * 0.2;
+								}
+							}
+							
+							const c = new Company();
+							c.calculateSalary(100);
+							c.calculateSalary(75);						
+						</code>
+					</pre>
 
+          <pre class="fragment fade-in">
+						<code data-trim data-line-numbers class="language-plaintext" >
+							ts-node ./company.ts 
+						</code>
+
+							<code
+							class="fragment fade-in language-plaintext"
+							data-trim
+							data-line-numbers
+							>
+							INFO: Running function calculateSalary with input 100
+							INFO: function calculateSalary ran with result 20
+							INFO: Running function calculateSalary with input 75
+							INFO: function calculateSalary ran with result 15
+						</code>
+					</pre>
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
 </html>
