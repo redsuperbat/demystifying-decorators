@@ -26,6 +26,35 @@
           <p>And what can they be used for? 🤷</p>
         </section>
         <section>
+          <pre>
+						<code data-trim data-line-numbers>
+							import "reflect-metadata";
+							import { Injectable, createContainer } from 'slim-di';
+							
+							@Injectable()
+							class FishingGear {}
+
+							@Injectable()
+							class FishingBoat {}
+
+							@Injectable()
+							class FisherManRoot {
+								constructor(
+									private readonly gear: FishingGear, 
+									private readonly boat: FishingBoat
+								){}
+							}
+
+							function main(){
+								const container = createContainer(FisherManRoot);
+								// Logs true
+								console.log(container.get(FishingBoat) === container.get(FishingBoat))
+							}
+							main()
+						</code>
+					</pre>
+        </section>
+        <section>
           <h2 class="r-fit-text">⚠️ Disclaimer! ⚠️</h2>
           <p class="r-fit-text">
             <a
@@ -36,12 +65,18 @@
             just came out!
           </p>
 
-          <!-- <p>
-					Decorators existed for years within typescript but the Ecmascript decorator proposal has reached stage 3
-					(candidate). Which is a bit different from the typescript standard. This talk will be about the typescript
-					decorator standard which is still highly relevant since most frameworks will take years to adapt to the new
-					standard when it eventually reaches stage 4 (finished) 
-				</p> -->
+          <aside class="notes">
+            <ul>
+              <li>
+                Ecmascript decorator proposal has reached stage 3 (candidate).
+              </li>
+              <li>The legacy typescript decorator standard</li>
+              <li>
+                take years to adapt to the new standard when it eventually
+                reaches stage 4
+              </li>
+            </ul>
+          </aside>
         </section>
         <section>
           <section>
@@ -122,7 +157,9 @@
           </section>
         </section>
         <section>
-          <small> company.ts </small>
+          <small> company.ts (Method Decorator) </small>
+          <!--	The property descriptor is a simple JavaScript object associated with each property of the 
+					object that contains information about that property such as its value and other metadata -->
           <pre>
 						<code  data-trim data-line-numbers="1-5|6|8-13|16-21|23-25">
 							function log(
@@ -171,9 +208,9 @@
 					</pre>
         </section>
         <section>
-          <small>company.ts</small>
+          <small>company.ts (Property Decorator) </small>
           <pre>
-						<code  data-trim data-line-numbers="*|16-26|29-30|37-40">
+						<code  data-trim data-line-numbers="1-15|16-26|29-30|37-39">
 							// Method Decorator
 							function log(
 								target: Object,
@@ -230,6 +267,93 @@
 						</code>
 					</pre>
         </section>
+        <section>
+          <section>
+            <h1 class="r-fit-text">When should I use decorators?</h1>
+            <p class="r-fit-text fragment fade-in">Just don't</p>
+            <p class="r-fit-text fragment fade-in">Use cases are very rare!</p>
+          </section>
+          <section>
+						<h2 style="margin-top: 15px;">Let the frameworks/libraries handle it! 🚀</h2>
+          
+						<ul class="fragment fade-in" >
+              <li>Frameworks like Angular</li>
+              <li>Dependency injection like Nest.js</li>
+              <li>Reactivity like stencil.js</li>
+            </ul>
+          </section>
+        </section>
+				<section>
+					<h4>slim-di.ts 💉</h4>
+					<pre>
+						<code data-trim data-line-numbers>
+							import "reflect-metadata";
+
+							function Injectable(): ClassDecorator {
+								return function (target) {
+									return target;
+								};
+							}
+
+							export interface Type&lt;T = unknown&gt; extends Function {
+								new (...args: any[]): T;
+							}
+
+							export interface DIContainer {
+								get&lt;T = unknown&gt;(token: Type&lt;T&gt;): T;
+							}
+
+							export const createContainer = &lt;T&gt;(root: Type&lt;T&gt;): DIContainer => {
+								const container = new Map&lt;Type, any>();
+
+								const instantiateDeps = (token: Type): unknown => {
+									if (container.get(token)) {
+										return container.get(token);
+									}
+
+									const dependencyMetadata: Type[] =
+										Reflect.getMetadata("design:paramtypes", token.prototype.constructor) ??
+										[];
+
+									const instance = new token(
+										...dependencyMetadata.map((it) => instantiateDeps(it))
+									);
+									container.set(token, instance);
+									return instance;
+								};
+
+								instantiateDeps(root);
+
+								return {
+									get(token) {
+										return container.get(token);
+									},
+								};
+							};
+
+							@Injectable()
+							class FishingGear {}
+
+							@Injectable()
+							class FishingBoat {}
+
+							@Injectable()
+							class FisherManRoot {
+								constructor(
+									private readonly gear: FishingGear,
+									private readonly boat: FishingBoat
+								) {}
+							}
+
+							function main() {
+								const container = createContainer(FisherManRoot);
+								// Logs true
+								console.log(container.get(FishingBoat) === container.get(FishingBoat));
+							}
+							main();
+						</code>
+					</pre>
+				</section>
       </div>
     </div>
 
