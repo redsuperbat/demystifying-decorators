@@ -170,6 +170,66 @@
 						</code>
 					</pre>
         </section>
+        <section>
+          <small>company.ts</small>
+          <pre>
+						<code  data-trim data-line-numbers="*|16-26|29-30|37-40">
+							// Method Decorator
+							function log(
+								target: Object,
+								propertyKey: string,
+								descriptor: PropertyDescriptor
+							) {
+								const originalMethod = descriptor.value;
+							
+								descriptor.value = function (this: any, ...args: any[]) {
+									console.log(`INFO: Running function ${propertyKey} with input ${args}`);
+									const res = originalMethod.call(this, ...args);
+									console.log(`INFO: function ${propertyKey} ran with result ${res}`);
+									return res;
+								};
+							}
+							// Property Decorator
+							function withBonus(target: Object, propertyKey: string) {
+								Object.defineProperty(target, propertyKey, {
+									get() {
+										return this.value * 1.2;
+									},
+									set(value) {
+										this.value = value;
+									},
+								});
+							}
+							
+							class Company {
+								@withBonus
+								public total = 0;
+								@log
+								calculateSalary(salary: number) {
+									return salary * 0.2;
+								}
+							}
+							
+							const c = new Company();
+							c.total = 400;
+							console.log("My total is:", c.total);												
+						</code>
+					</pre>
+
+          <pre class="fragment fade-in">
+						<code data-trim data-line-numbers class="language-plaintext" >
+							ts-node ./company.ts 
+						</code>
+
+							<code
+							class="fragment fade-in language-plaintext"
+							data-trim
+							data-line-numbers
+							>
+							My total is: 480
+						</code>
+					</pre>
+        </section>
       </div>
     </div>
 

@@ -13,7 +13,20 @@ function log(
   };
 }
 
+function withBonus(target: Object, propertyKey: string) {
+  Object.defineProperty(target, propertyKey, {
+    get() {
+      return this.value * 1.2;
+    },
+    set(value) {
+      this.value = value;
+    },
+  });
+}
+
 class Company {
+  @withBonus
+  public total = 0;
   @log
   calculateSalary(salary: number) {
     return salary * 0.2;
@@ -21,5 +34,5 @@ class Company {
 }
 
 const c = new Company();
-c.calculateSalary(100);
-c.calculateSalary(75);
+c.total = 400;
+console.log("My total is:", c.total);
