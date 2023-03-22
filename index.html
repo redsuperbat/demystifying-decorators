@@ -26,8 +26,8 @@
           <p>And what can they be used for? 🤷</p>
         </section>
         <section>
-          <pre>
-						<code data-trim data-line-numbers>
+          <pre runnable>
+						<code data-trim data-line-numbers class="language-typescript">
 							import "reflect-metadata";
 							import { Injectable, createContainer } from 'slim-di';
 							
@@ -47,7 +47,7 @@
 
 							function main(){
 								const container = createContainer(FisherManRoot);
-								// Logs true
+								/* Logs true */
 								console.log(container.get(FishingBoat) === container.get(FishingBoat))
 							}
 							main()
@@ -84,84 +84,127 @@
             <small class="fragment fade-in">
               <ul>
                 <li>
-                  PropertyDecorator
-                  <pre>
-									<code data-line-numbers data-trim>
-										class MyClass {
-											@Input()
-											myProp: string;
-										}
-									</code>
-								</pre>
+                  <div style="display: flex; align-items: center">
+                    <span style="margin-right: auto"> Property Decorator </span>
+                    <span style="width: 285px">
+                      <pre>
+												<code data-line-numbers data-trim>
+													class MyClass {
+														@Input()
+														myProp: string;
+													}
+												</code>
+											</pre>
+                    </span>
+                  </div>
                 </li>
                 <li class="fragment fade-in">
-                  MethodDecorator
-                  <pre>
-									<code data-line-numbers data-trim>
-										class MyClass {
-											@Computed()
-											myMethod(){
-												//
-											};
-										}
-									</code>
-								</pre>
+                  <div style="display: flex; align-items: center">
+                    <span style="margin-right: auto"> Method Decorator </span>
+                    <span style="width: 285px">
+                      <pre>
+												<code data-line-numbers data-trim>
+													class MyClass {
+														@Computed()
+														myMethod(){}
+													}
+												</code>
+											</pre>
+                    </span>
+                  </div>
                 </li>
                 <li class="fragment fade-in">
-                  ClassDecorator
-
-                  <pre>
-									<code data-line-numbers data-trim>
-										@Component()
-										class MyComponent {}
-									</code>
-								</pre>
+                  <div style="display: flex; align-items: center">
+                    <span style="margin-right: auto"> Class Decorator </span>
+                    <span style="width: 285px">
+                      <pre>
+												<code data-line-numbers data-trim>
+													@Component()
+													class MyComponent {}
+												</code>
+											</pre>
+                    </span>
+                  </div>
+                </li>
+                <li class="fragment fade-in">
+                  <div style="display: flex; align-items: center">
+                    <span style="margin-right: auto"> Accessor Decorator </span>
+                    <span style="width: 285px">
+                      <pre>
+												<code data-line-numbers data-trim>
+													class MyComponent {
+														@AccessorDecorator()
+														get prop(){}
+													}
+												</code>
+											</pre>
+                    </span>
+                  </div>
+                </li>
+                <li class="fragment fade-in">
+                  <div style="display: flex; align-items: center">
+                    <span style="margin-right: auto">
+                      Parameter Decorator
+                    </span>
+                    <span>
+                      <pre>
+												<code data-line-numbers data-trim>
+													class MyComponent {
+														prop(@Get("id") id: string){}
+													}
+												</code>
+											</pre>
+                    </span>
+                  </div>
                 </li>
               </ul>
             </small>
+						<aside class="notes">
+							<ul>
+								<li>
+									Decorators are just functions!
+								</li>
+								<li>There are 5 different types of decorators</li>
+							</ul>
+						</aside>
+          </section>
 
-            <pre class="fragment fade-in">
-						<code data-trim>
-							// My first decorator 🎉
-							function log() {
-								console.log("What's up JS-Meetup? ⚡️🚀")
-							}
-						</code>
-					</pre>
+          <section>
+            <pre runnable>
+							<code data-trim class="language-typescript">
+								/* My first method decorator 🎉 */
+								function log() {
+									console.log("What's up JS-Meetup? ⚡️🚀")
+								}
+								log();
+							</code>
+						</pre>
           </section>
 
           <section>
             <small> company.ts </small>
-            <pre>
-						<code data-line-numbers="1-3|5-10|7-9|6|*" data-trim class="language-ts">
-							function log(target: any, propertyKey: string, descriptor: any) {
-								console.log("What's up JS-Meetup? ⚡️🚀");
-							}
-							
-							class Company {
-								@log
-								calculateSalary(salary: number) {
-									return salary * 0.2;
+            <pre runnable>
+							<code data-line-numbers="1-3|5-10|7-9|6|*" data-trim class="language-typescript">
+								function log(target: any, propertyKey: string, descriptor: any) {
+									console.log("What's up JS-Meetup? ⚡️🚀");
 								}
-							}							
-						</code>
-					</pre>
-            <pre class="fragment fade-in">
-						<code data-trim data-line-numbers class="language-plaintext" >
-							ts-node ./company.ts 
-						</code>
-						<code class="fragment fade-in language-plaintext" data-trim data-line-numbers >
-							What's up JS-Meetup? ⚡️🚀
-						</code>
-					</pre>
+								
+								class Company {
+									@log
+									calculateSalary(salary: number) {
+										return salary * 0.2;
+									}
+								}							
+							</code>
+						</pre>
           </section>
         </section>
         <section>
           <small> company.ts (Method Decorator) </small>
           <!--	The property descriptor is a simple JavaScript object associated with each property of the 
 					object that contains information about that property such as its value and other metadata -->
-          <pre>
-						<code  data-trim data-line-numbers="1-5|6|8-13|16-21|23-25">
+          <pre runnable>
+						<code  data-trim data-line-numbers="1-5|6|8-13|16-21|23-25|" class="language-typescript">
 							function log(
 								target: Object,
 								propertyKey: string,
@@ -189,29 +232,21 @@
 							c.calculateSalary(75);						
 						</code>
 					</pre>
-
-          <pre class="fragment fade-in">
-						<code data-trim data-line-numbers class="language-plaintext" >
-							ts-node ./company.ts 
-						</code>
-
-							<code
-							class="fragment fade-in language-plaintext"
-							data-trim
-							data-line-numbers
-							>
-							INFO: Running function calculateSalary with input 100
-							INFO: function calculateSalary ran with result 20
-							INFO: Running function calculateSalary with input 75
-							INFO: function calculateSalary ran with result 15
-						</code>
-					</pre>
+          <aside class="notes">
+            <ul>
+              <li>
+                A property descriptor is an object that describes a property or
+                method being decorated
+              </li>
+              <li>Contains, value or getter and setter methods.</li>
+            </ul>
+          </aside>
         </section>
         <section>
           <small>company.ts (Property Decorator) </small>
-          <pre>
-						<code  data-trim data-line-numbers="1-15|16-26|29-30|37-39">
-							// Method Decorator
+          <pre runnable>
+						<code  data-trim data-line-numbers="1-14|16-26|29-30|36-39|42-45|" class="language-typescript">
+							/* Method Decorator */
 							function log(
 								target: Object,
 								propertyKey: string,
@@ -226,7 +261,7 @@
 									return res;
 								};
 							}
-							// Property Decorator
+							/* Property Decorator */
 							function withBonus(target: Object, propertyKey: string) {
 								Object.defineProperty(target, propertyKey, {
 									get() {
@@ -240,52 +275,80 @@
 							
 							class Company {
 								@withBonus
-								public total = 0;
+								public total: number = 0;
+								
 								@log
 								calculateSalary(salary: number) {
 									return salary * 0.2;
 								}
+								@log
+								addExpense(value: number){
+									this.total += value;
+								}
 							}
 							
 							const c = new Company();
-							c.total = 400;
+							const salary = c.calculateSalary(400);
+							c.addExpense(salary);
 							console.log("My total is:", c.total);												
-						</code>
-					</pre>
-
-          <pre class="fragment fade-in">
-						<code data-trim data-line-numbers class="language-plaintext" >
-							ts-node ./company.ts 
-						</code>
-
-							<code
-							class="fragment fade-in language-plaintext"
-							data-trim
-							data-line-numbers
-							>
-							My total is: 480
 						</code>
 					</pre>
         </section>
         <section>
           <section>
             <h1 class="r-fit-text">When should I use decorators?</h1>
-            <p class="r-fit-text fragment fade-in">Just don't</p>
+            <p class="r-fit-text fragment fade-in">
+              Short answer: <strong>Never!</strong>
+            </p>
             <p class="r-fit-text fragment fade-in">Use cases are very rare!</p>
           </section>
           <section>
-						<h2 style="margin-top: 15px;">Let the frameworks/libraries handle it! 🚀</h2>
-          
-						<ul class="fragment fade-in" >
-              <li>Frameworks like Angular</li>
-              <li>Dependency injection like Nest.js</li>
-              <li>Reactivity like stencil.js</li>
+            <h2>Let the frameworks/libraries handle it! 🚀</h2>
+
+            <ul class="fragment fade-in">
+              <li>Component frameworks - Angular</li>
+              <li>Dependency injection - Nest.js</li>
+              <li>Reactivity - stencil.js</li>
             </ul>
+            <p class="fragment fade-in">
+              🤷‍♀️ High abstractions which can create a lot of confusion if abused
+              🤷
+            </p>
+          </section>
+          <section>
+						<h4>Do you know what this code is doing?</h4>
+            <pre>
+							<code data-trim data-line-numbers>
+								@Freeze
+								class Company {
+									constructor(
+										@Inject("Config.BASE_URL")
+										private readonly baseUrl: string,
+										@Optional()
+										private readonly service: HttpService
+									){}
+									@Thing()
+									prop: string;
+
+									@FancyLog()
+									calculateSalary(
+										@Validate() value: number, 
+										@Heyo() isBigBoss: boolean
+									){
+										/* Code here */
+									};
+									/**
+										...
+									**/
+
+								}
+							</code>
+						</pre>
           </section>
         </section>
-				<section>
-					<h4>slim-di.ts 💉</h4>
-					<pre>
+        <section>
+          <h4>slim-di.ts 💉</h4>
+          <pre>
 						<code data-trim data-line-numbers>
 							import "reflect-metadata";
 
@@ -347,13 +410,13 @@
 
 							function main() {
 								const container = createContainer(FisherManRoot);
-								// Logs true
+								/* Logs true */
 								console.log(container.get(FishingBoat) === container.get(FishingBoat));
 							}
 							main();
 						</code>
 					</pre>
-				</section>
+        </section>
       </div>
     </div>
 
@@ -361,6 +424,7 @@
     <script src="plugin/notes/notes.js"></script>
     <script src="plugin/markdown/markdown.js"></script>
     <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/code-exec/plugin.js"></script>
     <script>
       // More info about initialization & config:
       // - https://revealjs.com/initialization/
@@ -368,7 +432,7 @@
       Reveal.initialize({
         hash: true,
         // Learn about plugins: https://revealjs.com/plugins/
-        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealCodeExec],
       });
     </script>
   </body>
