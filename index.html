@@ -21,6 +21,13 @@
     <div class="reveal">
       <div class="slides">
         <section>
+          <pre runnable>
+						<code data-line-numbers data-trim>
+							console.log("hello world!")
+						</code>
+					</pre>
+        </section>
+        <section>
           <h2>Demystifying Decorators</h2>
           <p>How do <code>@Decorators()</code> really work?</p>
           <p>And what can they be used for? 🤷</p>
@@ -159,14 +166,12 @@
                 </li>
               </ul>
             </small>
-						<aside class="notes">
-							<ul>
-								<li>
-									Decorators are just functions!
-								</li>
-								<li>There are 5 different types of decorators</li>
-							</ul>
-						</aside>
+            <aside class="notes">
+              <ul>
+                <li>Decorators are just functions!</li>
+                <li>There are 5 different types of decorators</li>
+              </ul>
+            </aside>
           </section>
 
           <section>
@@ -316,7 +321,7 @@
             </p>
           </section>
           <section>
-						<h4>Do you know what this code is doing?</h4>
+            <h4>Do you know what this code is doing?</h4>
             <pre>
 							<code data-trim data-line-numbers>
 								@Freeze
@@ -418,16 +423,17 @@
 						</code>
 					</pre>
         </section>
-				<section>
-					<h1 class="r-fit-text">Thank you, Questions?</h1>
-					<br>
-					<small>
-						<a href="https://redsuperbat.github.io/demystifying-decorators/">Presentation</a>
-						<br>
-						<a href="https://www.npmjs.com/package/slim-di">slim-di</a>
-					</small>
-					</small>
-				</section>
+        <section>
+          <h1 class="r-fit-text">Thank you, Questions?</h1>
+          <br />
+          <small>
+            <a href="https://redsuperbat.github.io/demystifying-decorators/"
+              >Presentation</a
+            >
+            <br />
+            <a href="https://www.npmjs.com/package/slim-di">slim-di</a>
+          </small>
+        </section>
       </div>
     </div>
 
@@ -437,13 +443,14 @@
     <script src="plugin/highlight/highlight.js"></script>
     <script src="plugin/code-exec/plugin.js"></script>
     <script>
-      // More info about initialization & config:
-      // - https://revealjs.com/initialization/
-      // - https://revealjs.com/config/
       Reveal.initialize({
         hash: true,
-        // Learn about plugins: https://revealjs.com/plugins/
-        plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealCodeExec],
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealNotes,
+          RevealCodeExec({ execUrl: "http://localhost:3000" }),
+        ],
       });
     </script>
   </body>

@@ -1,4 +1,4 @@
-window.RevealCodeExec = () => ({
+window.RevealCodeExec = ({ execUrl }) => ({
   id: "code-exec",
   init: () => {
     const codeblocks = document.querySelectorAll("pre.code-wrapper[runnable]");
@@ -22,15 +22,19 @@ window.RevealCodeExec = () => ({
         }
         div.innerText = "Loading...";
         const body = (
-          code.querySelector("code.visible.current-fragment") || code.querySelector("code")
+          code.querySelector("code.visible.current-fragment") ||
+          code.querySelector("code")
         ).textContent;
-        console.log(body);
-        const res = await fetch("http://localhost:3000", {
+        const res = await fetch(execUrl, {
           method: "POST",
           body,
         });
-        const text = await res.text()
-        div.innerText = text || runTheCode;
+        if (!res.ok) {
+          div.innerText = runTheCode;
+          return;
+        }
+        const text = await res.text();
+        div.innerText = text || runTheCode;
       };
       code.appendChild(div);
     }
